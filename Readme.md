@@ -1,4 +1,6 @@
 # 🌍 Global CO2 Emissions Dashboard
+
+![Snippet of the Dashboard](<images\dashboard snippet.png>)
 ## 🚀 Introduction
 
 Climate change is an undeniable global challenge, and addressing it starts with understanding the data. This project is a culmination of my passion for environmental sustainability and my skills in data analysis.
@@ -73,7 +75,7 @@ After this data preparation , I got the final cleaned dataset ready for my SQL a
 
 Now , the cleaned dataset i analysed further using SQL . In my project, I have used **PostgreSQL** in Visual code environment. I created the table using python **sqlalchemy** library . Then imported the data to the sql database through PgAdmin directly. 
 
-After importing the data, I went on to do the analysis . some of them i have stated below and the entire sql can be found here : [Co2 EmisssionS Analysis]()
+After importing the data, I went on to do the analysis . some of them i have stated below and the entire sql can be found here : [Co2 Emisssion Analysis](https://github.com/nikitha108/Emission_project/blob/main/Co2%20emissions%20Analysis.sql)
 
 1. Total Co2 Analysis per year to see how it changes over time
 
@@ -102,4 +104,128 @@ ORDER BY CO2_per_Capita_Rank;
 
 Here I wanted to see what was the co2 per capita to compare emissions across countries with various population sizes. I could see that smaller , wealthier countries such as Qatar , Bahrain, UAE, Saudi Arabia etc have the highest per capita emissions while densely populated countries have low per capita values despite higher emissions. 
 
-4. 
+4. Co2 Emission Growth absolute and %
+
+```sql
+--  co2 emission growth % gives small developing nations since their base value is different 
+SELECT
+    country,
+    continent,
+    co2 AS co2_emissions,
+    co2_growth_abs,
+    co2_growth_prct
+FROM emissions_data
+WHERE year = 2023
+ORDER BY co2_growth_prct DESC;
+
+-- co2 absolute growth gives large developing nations since their base value is higher
+SELECT
+    country,
+    continent,
+    co2 AS co2_emissions,
+    co2_growth_abs,
+    co2_growth_prct
+FROM emissions_data
+WHERE year = 2023
+ORDER BY co2_growth_abs DESC;
+```
+Here , I wanted to see how the co2 emissions are growing per year. I see that low developing countries with low baseline emissions have the highest growth % with low absolute growth while high developed countries with high emissions have low growth % but high absolute growth in emissions.
+
+# Visualization Using Power BI
+
+Power BI was used to bring the analysis to life using charts and other nice visuals . 
+
+### The dashboard can be found here :  
+ ### [Global CO2 Emissions Analysis Dashboard](https://github.com/nikitha108/Emission_project/blob/main/Global%20CO2%20Emissions%20Dashboard.pbix)
+
+ Below is the snippet of the dashboard 
+
+ ![alt text](image.png)
+
+ ## 1. Importing Data Sources & Adding columns
+
+
+ I imported the dataset through the PostgreSQL Server Database directly. I also added the other SQL queries through the advanced options by pasting the queries.
+
+ I also wanted a column showing the emissions from other sources since there was data from coal, oil and flaring.
+
+## 2. Visuals 
+
+- Dynamic Map Visuals highlighting the co2 emissions with a gradient scale for visual clarity.
+
+- Donut charts to show the share of emissions by Continent
+
+- Area chart showing the Trend of CO2 Emissions over Time
+
+- Bar charts showing the Top ten countries with the highest emissions
+
+- Cards to show the Total co2 emissions, Yearly emissions with the Co2 growth % vs PY
+
+## Custom Calculations Using DAX
+
+I used DAX to perform several calculations such as current year and previous year emissions, calculating the growth % and creating a co2 summary showing growth vs py. I used DAX also for dynamic color codeing.
+
+
+DAX for dynamic color coding for continent to visualize in a table
+```DAX
+Color Continent = 
+    SWITCH(
+        TRUE(),
+        MAX('public emissions_data'[continent]) = "North America", "#C2272D",
+       MAX('public emissions_data'[continent]) = "South America", "#3AB54A",
+        MAX('public emissions_data'[continent]) = "Europe", "#2AABE2",
+        MAX('public emissions_data'[continent]) = "Africa", "#F15A25",
+        MAX('public emissions_data'[continent]) = "Asia", "#FBB03B",
+        MAX('public emissions_data'[continent]) = "Oceania", "#2E3192"
+    )
+```
+ DAX for CO2 growth & co2 summary
+
+ ![alt text](image-2.png)
+
+ ```dax
+ CO2 Growth % = 
+DIVIDE(
+    ([Current Year Emissions] - [Previous Year Emissions]
+    ),
+    [Previous Year Emissions],
+    0
+)
+
+Growth Summary = IF([CO2 Growth %] > 0, "▲", "▼") & 
+IF( [CO2 Growth %] > 0 , "+", "") &
+FORMAT([CO2 Growth %], "0.00%") &  " vs " & (MAX('public emissions_data'[year]) - 1)
+
+Growth color = SWITCH(
+    TRUE(),
+    [CO2 Growth %] > 0 , "RED",
+    [CO2 Growth %] < 0, "GREEN"
+)
+```
+
+# Key Insights
+- Rising Global Emissions: Despite sustainability efforts, emissions continue to rise globally.
+- Coal's Dominance: Coal remains the largest contributor, highlighting the need for renewable energy alternatives.
+- Per Capita Disparities:
+High-income countries have significantly higher emissions per capita.
+- Rapidly industrializing nations (China, USA , India etc)are emerging as hotspots.
+- Regional Trends: Some regions esp Europe show promising declines, likely due to renewable energy adoption. This is something that could be leanred further and applied to reduce the emissions in the future
+- In the past 15 years, only one year showed a decrease in CO2 Emissions and that is 2020. This shows that less activity overall had reduced emissions too.
+
+# Challenges Faced
+- Cleaning the Data: the data had 50k rows and 78 columns having data from all the countries in the world from 1970 to 2023. So, to clean the data and to filter out all the columns from 78 to the ones that i would need was indeed a daunting task but I learnt a lot.
+
+- As i said, this was a vast dataset, and to decide on what i need to focus on was a difficult decision. I would love to analyse further into the other columns that I havent used here.
+
+# My Passion for Sustainability
+As someone deeply committed to environmental advocacy, this project is a personal mission to use data for good. It reflects my belief that data-driven decisions can empower humanity to combat climate change effectively.
+
+# Conclusion
+This project has been a rewarding journey that combined my technical skills with my dedication to sustainability. I hope this dashboard inspires others to take action and leverage data in the fight against climate change.
+
+# Future Scope
+- Add predictive analytics to forecast emissions trends.
+- Integrate renewable energy data to track progress toward sustainability goals.
+- Expand the analysis to include social and economic impacts of emissions.
+- Take into account the land usage and deforestation factors that could aide the co2 emissions
+- A comprehensice sector analysis 

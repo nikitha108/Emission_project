@@ -10,7 +10,7 @@ GROUP BY year
 ORDER BY year;
 
 
--- Top Ten countries by Total co2 emissions in 2022
+--Query: Top Ten countries by Total co2 emissions in 2022
  
 SELECT 
     rank() OVER (ORDER BY SUM(co2) DESC) AS Country_rank_by_co2,
