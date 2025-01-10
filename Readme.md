@@ -85,7 +85,7 @@ After importing the data, I went on to do the analysis . some of them i have sta
 Here I wanted to see the top co2 emitting countries while also looking how population is also a major factor contributing to pollution. Below are the results of the query.
 
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 3. Co2 per capita Analysis
 
