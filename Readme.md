@@ -1,6 +1,6 @@
 # 🌍 Global CO2 Emissions Dashboard
 
-![Snippet of the Dashboard](<images\dashboard snippet.png>)
+![Snippet of the Dashboard](<images/dashboard snippet.png>) *Dashboard Snippet*
 ## 🚀 Introduction
 
 Climate change is an undeniable global challenge, and addressing it starts with understanding the data. This project is a culmination of my passion for environmental sustainability and my skills in data analysis.
@@ -140,7 +140,7 @@ Power BI was used to bring the analysis to life using charts and other nice visu
 
  Below is the snippet of the dashboard 
 
- ![alt text](image.png)
+![alt text](<images/dashboard snippet.png>)
 
  ## 1. Importing Data Sources & Adding columns
 
